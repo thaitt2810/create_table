@@ -107,9 +107,7 @@ function deleteRow() {
 
     tdAction.forEach((item, index) => {
         item.addEventListener('click', () => {
-            console.log("hi")
             productsList.splice(index, 1);
-            console.log(productsList)
             renderTable();
         })
     })
@@ -132,7 +130,6 @@ function updateName() {
                     document.querySelector(".error-name").innerHTML = ""
                     document.querySelector('.update-name').value = "";
                     name = "";
-                    console.log(productsList)
                 } else {
                     document.querySelector(".error-name").innerHTML = "Giá trị nhập chưa hợp lệ"
                 }
@@ -152,7 +149,6 @@ function updatePrice() {
         item.addEventListener('click', (e) => {
             let price
             updatePriceModal.classList.remove('hide')
-            console.log(e.target.textContent)
             updatePriceInput.addEventListener('change', (e) => {
                 price = e.target.value;
             })
@@ -164,7 +160,6 @@ function updatePrice() {
                     document.querySelector(".error-price").innerHTML = "";
                     document.querySelector(".update-price").value = "";
                     price = "";
-                    console.log(productsList)
                     renderTable();
                 } else {
                     document.querySelector(".error-price").innerHTML = "Giá trị nhập chưa hợp lệ"
