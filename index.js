@@ -1,4 +1,4 @@
-const productsList = [{
+let productsList = [{
     name: "Mouse",
     price: 2000
 },
@@ -25,12 +25,13 @@ const updatePriceSubmit = document.querySelector('.update-price-submit');
 const closeAddModal = document.querySelector('.close-add-modal')
 const closeUpdateNameModal = document.querySelector('.close-update-name-modal')
 const closeUpdatePriceModal = document.querySelector('.close-update-price-modal')
-
+const searchInput = document.querySelector('.search_input');
+const searchBtn = document.querySelector('.search-btn');
+const errorName = document.querySelector(".error-name");
+const errorPrice = document.querySelector(".error-price")
 
 function renderTable() {
-
     let productHtml = productsList.map((item, index) => {
-
         return `<tr>
         <td>${index + 1}</td>
         <td class="name">${item.name}</td>
@@ -41,16 +42,20 @@ function renderTable() {
     })
 
     let total = productsList.reduce((acc, curr) => {
-        return acc + curr.price
+        return acc + Number(curr.price)
     }, 0)
 
     tableElemnt.innerHTML = productHtml.join('')
     totalElement.textContent = total
 
-    deleteRow();
-    updateName();
-    updatePrice();
+    const tdName = document.querySelectorAll('.name');
+    const tdPrice = document.querySelectorAll('.price');
 
+
+    deleteRow();
+    update(tdName, updateNameModal, updateNameInput, updateNameSubmit, errorName, "name", closeUpdateNameModal);
+    update(tdPrice, updatePriceModal, updatePriceInput, updatePriceSubmit, errorPrice, "price", closeUpdatePriceModal);
+    // updateName();
 }
 
 function add() {
@@ -60,7 +65,6 @@ function add() {
     document.querySelector('.add-btn').addEventListener('click', () => {
         addModal.classList.remove('hide')
     })
-
 
     closeAddModal.addEventListener('click', () => {
         addModal.classList.add('hide')
@@ -100,8 +104,6 @@ document.querySelector('.delete-btn').addEventListener('click', () => {
 })
 
 
-
-
 function deleteRow() {
     const tdAction = document.querySelectorAll(".action");
 
@@ -113,64 +115,59 @@ function deleteRow() {
     })
 }
 
-function updateName() {
-    const tdName = document.querySelectorAll('.name');
-    tdName.forEach((item, index) => {
+
+function update(element, modal, input, submit, error, type, iconClose) {
+
+    element.forEach((item, index) => {
         item.addEventListener('click', (e) => {
-            let name
-            updateNameModal.classList.remove('hide')
-            updateNameInput.addEventListener('change', (e) => {
-                name = e.target.value;
+            let value
+            let currentIndex;
+            modal.classList.remove('hide')
+            input.addEventListener('change', (e) => {
+                value = e.target.value;
             })
-            updateNameSubmit.addEventListener('click', () => {
-                if (name) {
-                    e.target.textContent = name
-                    updateNameModal.classList.add('hide')
-                    productsList[index].name = name
-                    document.querySelector(".error-name").innerHTML = ""
-                    document.querySelector('.update-name').value = "";
-                    name = "";
+
+            submit.addEventListener('click', () => {
+
+                if (value && currentIndex != index) {
+                    e.target.textContent = value
+                    modal.classList.add('hide')
+                    productsList[index][type] = value
+                    currentIndex = index;
+                    renderTable()
+                    error.innerHTML = ""
+                    input.value = "";
+                    value = "";
                 } else {
-                    document.querySelector(".error-name").innerHTML = "Giá trị nhập chưa hợp lệ"
+                    error.innerHTML = "Giá trị nhập chưa hợp lệ"
                 }
             })
-            closeUpdateNameModal.addEventListener('click', () => {
-                updateNameModal.classList.add('hide')
-            })
-        })
-    })
 
 
-}
-
-function updatePrice() {
-    const tdPrice = document.querySelectorAll('.price');
-    tdPrice.forEach((item, index) => {
-        item.addEventListener('click', (e) => {
-            let price
-            updatePriceModal.classList.remove('hide')
-            updatePriceInput.addEventListener('change', (e) => {
-                price = e.target.value;
-            })
-            updatePriceSubmit.addEventListener('click', () => {
-                if (price) {
-                    e.target.textContent = price
-                    updatePriceModal.classList.add('hide')
-                    productsList[index].price = Number(price)
-                    document.querySelector(".error-price").innerHTML = "";
-                    document.querySelector(".update-price").value = "";
-                    price = "";
-                    renderTable();
-                } else {
-                    document.querySelector(".error-price").innerHTML = "Giá trị nhập chưa hợp lệ"
-                }
-            })
-            closeUpdatePriceModal.addEventListener('click', () => {
-                updatePriceModal.classList.add('hide')
+            iconClose.addEventListener('click', () => {
+                modal.classList.add('hide')
             })
         })
     })
 }
+
+
+function search() {
+    let value;
+    searchInput.addEventListener('change', (e) => {
+        value = e.target.value;
+    })
+    searchBtn.addEventListener('click', () => {
+
+        productsList = productsList.filter(item => {
+            return item.name.toLowerCase().includes(value);
+        })
+
+        renderTable()
+    })
+}
+
+search();
 
 add();
 

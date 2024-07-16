@@ -149,3 +149,19 @@ td {
 .modal-body__price {
     margin-bottom: 15px;
 }
+
+.search {
+    margin-bottom: 15px;
+}
+
+.search-btn {
+    width: 70px;
+    height: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search_input {
+    height: 30px;
+    border-radius: 5px;
+}
